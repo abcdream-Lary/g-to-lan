@@ -11,4 +11,10 @@ tasks:
     folder_name: Shamiko
     
   - url: https://github.com/Dr-TSNG/ZygiskNext/releases/latest
-    folder_name: ZygiskNext 
+    folder_name: ZygiskNext
+
+  - url: https://github.com/Xposed-Modules-Repo/com.sevtinge.hyperceiler/releases/latest
+    folder_name: HyperCeiler
+
+  - url: https://github.com/Xposed-Modules-Repo/top.hookvip.pro/releases/latest
+    folder_name: Hookvip
