@@ -1,0 +1,14 @@
+# 下载任务配置文件
+# tasks: 下载任务列表
+#   - url: GitHub release页面的URL
+#   - folder_name: 上传到蓝奏云后的文件夹名称
+
+tasks:
+  - url: https://github.com/JingMatrix/LSPosed/releases/latest
+    folder_name: LSP
+    
+  - url: https://github.com/LSPosed/LSPosed.github.io/releases/latest
+    folder_name: Shamiko
+    
+  - url: https://github.com/Dr-TSNG/ZygiskNext/releases/latest
+    folder_name: ZygiskNext 
