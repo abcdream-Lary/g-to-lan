@@ -2,7 +2,7 @@ name: Sync GitHub Release to LanZou
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # 每12小时运行一次
+    - cron: '0 0 */3 * *'   # 每3天检查一次
   workflow_dispatch:  # 允许手动触发
 
 jobs:
