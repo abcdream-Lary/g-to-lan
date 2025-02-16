@@ -5,22 +5,22 @@
 
 tasks:
   - url: https://github.com/JingMatrix/LSPosed/releases/latest
-    folder_name: 模块/LSP
+    folder_name: LSP
     
   - url: https://github.com/LSPosed/LSPosed.github.io/releases/latest
-    folder_name: 模块/Shamiko
+    folder_name: Shamiko
     
   - url: https://github.com/Dr-TSNG/ZygiskNext/releases/latest
-    folder_name: 模块/ZygiskNext
+    folder_name: ZygiskNext
 
   - url: https://github.com/Xposed-Modules-Repo/com.sevtinge.hyperceiler/releases/latest
-    folder_name: 模块/HyperCeiler
+    folder_name: HyperCeiler
 
   - url: https://github.com/Xposed-Modules-Repo/top.hookvip.pro/releases/latest
-    folder_name: 模块/Hookvip
+    folder_name: Hookvip
 
   - url: https://github.com/xiaye13579/BBLL/releases/latest
-    folder_name: 程序/BBLL
+    folder_name: BBLL
 
   - url: https://github.com/xiaoyaocz/dart_simple_live/releases/latest
-    folder_name: 程序/SimpleLive
+    folder_name: SimpleLive
