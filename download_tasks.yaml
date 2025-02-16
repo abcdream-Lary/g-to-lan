@@ -23,4 +23,4 @@ tasks:
     folder_name: BBLL
 
   - url: https://github.com/xiaoyaocz/dart_simple_live/releases/latest
-    folder_name: Simple Live
+    folder_name: SimpleLive
