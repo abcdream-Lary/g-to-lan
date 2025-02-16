@@ -1,4 +1,4 @@
-name: Check GitHub Release Updates
+name: Sync GitHub Release to LanZou
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 jobs:
-  check-and-upload:
+  sync-to-lanzou:
     runs-on: ubuntu-latest
     
     steps:
@@ -35,5 +35,5 @@ jobs:
         echo "    'uid': '${{ secrets.LANZOU_UID }}'" >> config.py
         echo "}" >> config.py
         
-    - name: Run update check
-      run: python check_github_update.py 
+    - name: Run sync script
+      run: python github_to_lanzou.py 

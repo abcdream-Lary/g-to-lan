@@ -29,12 +29,12 @@ def read_tasks() -> List[Dict]:
         print(f"{RED}✗ 读取配置文件失败: {str(e)}{RESET}")
         return []
 
-def get_latest_release(url: str) -> Optional[Tuple[str, str]]:
+def get_latest_release(url: str) -> Optional[List[Tuple[str, str]]]:
     """获取GitHub最新release信息
     Args:
         url: GitHub release页面URL
     Returns:
-        Tuple[str, str]: (下载链接, 文件名), 失败返回None
+        List[Tuple[str, str]]: [(下载链接, 文件名)], 失败返回None
     """
     try:
         # 从URL中提取owner和repo
@@ -61,16 +61,24 @@ def get_latest_release(url: str) -> Optional[Tuple[str, str]]:
             print(f"{RED}✗ 没有找到可下载的文件{RESET}")
             return None
             
-        # 获取第一个资源文件
-        asset = assets[0]
-        download_url = asset.get('browser_download_url')
-        file_name = asset.get('name')
+        # 获取所有符合条件的资源文件
+        download_files = []
+        for asset in assets:
+            file_name = asset.get('name', '').lower()
+            # 排除源代码zip文件（通常包含 'source' 或 'src' 字样）
+            if ('source' in file_name or 'src' in file_name):
+                continue
+            # 只下载apk、exe和zip文件
+            if file_name.endswith(('.apk', '.exe', '.zip')):
+                download_url = asset.get('browser_download_url')
+                if download_url:
+                    download_files.append((download_url, asset.get('name')))
         
-        if not download_url or not file_name:
-            print(f"{RED}✗ 无法获取下载信息{RESET}")
+        if not download_files:
+            print(f"{RED}✗ 没有找到符合条件的文件{RESET}")
             return None
             
-        return download_url, file_name
+        return download_files
         
     except Exception as e:
         print(f"{RED}✗ 获取release信息失败: {str(e)}{RESET}")
@@ -597,33 +605,34 @@ def main():
             
             try:
                 # 获取最新release信息
-                release_info = get_latest_release(url)
-                if not release_info:
+                release_files = get_latest_release(url)
+                if not release_files:
                     print(f"{RED}✗ 获取release信息失败{RESET}")
                     continue
-                    
-                download_url, file_name = release_info
-                save_path = os.path.join(temp_dir, file_name)
                 
-                # 下载文件
-                print(f"\n{BLUE}[1/3] 下载文件{RESET}")
-                if not download_file(download_url, save_path):
-                    continue
-                    
-                # 检查文件大小
-                if not check_file_size(save_path):
-                    continue
-                    
                 # 创建文件夹
-                print(f"\n{BLUE}[2/3] 创建目标文件夹{RESET}")
+                print(f"\n{BLUE}[1/3] 创建目标文件夹{RESET}")
                 folder_id = lanzou.create_folder(folder_name)
                 if not folder_id:
                     continue
+                
+                # 下载并上传每个文件
+                for index, (download_url, file_name) in enumerate(release_files, 1):
+                    print(f"\n{BLUE}[2/3] 下载文件 ({index}/{len(release_files)}){RESET}")
+                    save_path = os.path.join(temp_dir, file_name)
                     
-                # 上传文件
-                print(f"\n{BLUE}[3/3] 上传文件{RESET}")
-                if not lanzou.upload_file(save_path, folder_id):
-                    continue
+                    # 下载文件
+                    if not download_file(download_url, save_path):
+                        continue
+                        
+                    # 检查文件大小
+                    if not check_file_size(save_path):
+                        continue
+                        
+                    # 上传文件
+                    print(f"\n{BLUE}[3/3] 上传文件 ({index}/{len(release_files)}){RESET}")
+                    if not lanzou.upload_file(save_path, folder_id):
+                        continue
                     
                 print(f"\n{GREEN}✓ 任务完成{RESET}")
                 

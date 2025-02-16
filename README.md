@@ -1,11 +1,10 @@
 # g-to-lan
 
-一个命令行工具，用于自动同步 GitHub Release 到蓝奏云。支持多个项目的自动检查、下载和上传，可配置 GitHub Actions 实现定时自动更新。
+一个命令行工具，用于自动同步 GitHub Release 到蓝奏云。支持多个项目的自动下载和上传，可配置 GitHub Actions 实现定时自动更新。
 
 ## 功能特点
 
-- 自动检查 GitHub Release 更新
-- 支持多个项目同时监控
+- 支持多个项目同时同步
 - 自动下载最新版本文件
 - 自动上传到蓝奏云指定文件夹
 - 支持 GitHub Actions 自动运行
@@ -16,7 +15,7 @@
 
 ### 1. 配置文件
 
-在 `download_tasks.yaml` 中配置需要监控的项目：
+在 `download_tasks.yaml` 中配置需要同步的项目：
 
 ```yaml
 tasks:
@@ -39,13 +38,11 @@ tasks:
 
 项目设置了自动运行计划：
 
-- 每12小时自动检查一次更新
+- 每12小时自动同步一次
 - 可以在 GitHub Actions 页面手动触发运行
-- 发现更新时自动下载并上传
 
 ## 文件说明
 
-- `check_github_update.py`: 检查更新的主程序
 - `github_to_lanzou.py`: 下载和上传的实现
 - `download_tasks.yaml`: 任务配置文件
 - `config.py`: 蓝奏云账号配置（通过 GitHub Secrets 设置）
@@ -70,10 +67,10 @@ tasks:
 2. 配置蓝奏云账号：
 在 `config.py` 中填写账号信息
 
-3. 运行检查：
+3. 运行同步：
 
     ```bash
-    python check_github_update.py
+    python github_to_lanzou.py
     ```
 
 ## 注意事项
