@@ -584,6 +584,8 @@ def main():
         
     # 创建临时目录
     with tempfile.TemporaryDirectory() as temp_dir:
+        print(f"{BLUE}[初始化] 创建临时目录: {temp_dir}{RESET}")
+        
         # 创建蓝奏云会话并登录
         cookie_path = os.path.join(temp_dir, 'cookie.json')
         lanzou = LanZouSession(cookie_path)
@@ -634,12 +636,17 @@ def main():
                     if not lanzou.upload_file(save_path, folder_id):
                         continue
                     
+                    # 删除已上传的文件
+                    os.remove(save_path)
+                    print(f"{BLUE}[清理] 删除临时文件: {file_name}{RESET}")
+                    
                 print(f"\n{GREEN}✓ 任务完成{RESET}")
                 
             except Exception as e:
                 print(f"{RED}✗ 处理任务失败: {str(e)}{RESET}")
                 continue
                 
+    print(f"\n{BLUE}[清理] 删除临时目录{RESET}")
     print(f"\n{GREEN}=== 所有任务处理完成 ==={RESET}")
         
 if __name__ == "__main__":
