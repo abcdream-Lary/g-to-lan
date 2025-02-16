@@ -386,22 +386,89 @@ class LanZouSession:
         files = self.get_files(folder_id)
         return any(f.name == file_name or f.name_all == file_name for f in files)
         
-    def create_folder(self, folder_name: str) -> Optional[str]:
-        """在蓝奏云创建文件夹"""
+    def create_folder_path(self, folder_path: str) -> Optional[str]:
+        """创建多层文件夹路径
+        Args:
+            folder_path: 文件夹路径，使用/分隔，如 "folder1/folder2/folder3"
+        Returns:
+            str: 最后一层文件夹的ID，失败返回None
+        """
         if not self.is_login:
             print(f"{RED}✗ 请先登录{RESET}")
             return None
-            
+
         try:
+            folders = folder_path.strip('/').split('/')
+            current_parent_id = "-1"  # 从根目录开始
+
+            for folder_name in folders:
+                # 检查当前层级是否已存在该文件夹
+                folder_id = None
+                current_folders = self.get_folders(current_parent_id)
+                for folder in current_folders:
+                    if folder.name == folder_name:
+                        folder_id = folder.folder_id
+                        break
+
+                if folder_id:
+                    print(f"{YELLOW}! 文件夹已存在: {folder_name}{RESET}")
+                    current_parent_id = folder_id
+                    continue
+
+                print(f"\n[创建文件夹]")
+                print(f"文件夹名称: {folder_name}")
+                print(f"父文件夹ID: {current_parent_id}")
+
+                result = self._post(
+                    f"{self.base_url}/doupload.php",
+                    data={
+                        "task": "2",
+                        "parent_id": current_parent_id,
+                        "folder_name": folder_name,
+                        "folder_description": ""
+                    }
+                )
+
+                folder_id = result.get('text')
+                if not folder_id:
+                    print(f"{RED}✗ 创建失败，无法获取文件夹ID{RESET}")
+                    return None
+
+                print(f"{GREEN}✓ 创建成功，文件夹ID: {folder_id}{RESET}")
+                current_parent_id = folder_id
+
+            return current_parent_id
+
+        except Exception as e:
+            print(f"{RED}✗ 创建文件夹路径失败: {str(e)}{RESET}")
+            return None
+
+    def create_folder(self, folder_name: str) -> Optional[str]:
+        """在蓝奏云创建文件夹，支持根目录和多层路径
+        Args:
+            folder_name: 文件夹名称，支持多层路径，如 "folder1/folder2/folder3"
+        Returns:
+            str: 文件夹ID，失败返回None
+        """
+        if not self.is_login:
+            print(f"{RED}✗ 请先登录{RESET}")
+            return None
+
+        try:
+            # 检查是否是多层路径
+            if '/' in folder_name:
+                return self.create_folder_path(folder_name)
+            
+            # 单层目录的处理
             # 先检查文件夹是否已存在
             folder_id = self.get_folder_id(folder_name)
             if folder_id:
                 print(f"{YELLOW}! 文件夹已存在: {folder_name}{RESET}")
                 return folder_id
-                
+
             print(f"\n[创建文件夹]")
             print(f"文件夹名称: {folder_name}")
-            
+
             result = self._post(
                 f"{self.base_url}/doupload.php",
                 data={
@@ -411,19 +478,19 @@ class LanZouSession:
                     "folder_description": ""
                 }
             )
-            
+
             folder_id = result.get('text')
             if folder_id:
                 print(f"{GREEN}✓ 创建成功，文件夹ID: {folder_id}{RESET}")
                 return folder_id
-                
+
             print(f"{RED}✗ 创建失败，无法获取文件夹ID{RESET}")
             return None
-            
+
         except Exception as e:
             print(f"{RED}✗ 创建文件夹失败: {str(e)}{RESET}")
             return None
-            
+
     def upload_file(self, file_path: str, folder_id: str) -> bool:
         """上传文件到蓝奏云"""
         if not self.is_login:
