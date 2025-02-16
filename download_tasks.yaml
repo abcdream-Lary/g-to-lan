@@ -18,3 +18,9 @@ tasks:
 
   - url: https://github.com/Xposed-Modules-Repo/top.hookvip.pro/releases/latest
     folder_name: Hookvip
+
+  - url: https://github.com/xiaye13579/BBLL/releases/latest
+    folder_name: BBLL
+
+  - url: https://github.com/xiaoyaocz/dart_simple_live/releases/latest
+    folder_name: Simple Live
