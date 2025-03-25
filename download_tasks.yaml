@@ -14,10 +14,10 @@ tasks:
     folder_name: 模块/ZygiskNext
 
   - url: https://github.com/Xposed-Modules-Repo/com.sevtinge.hyperceiler/releases/latest
-    folder_name: 模块/HyperCeiler
+    folder_name: 应用/HyperCeiler
 
   - url: https://github.com/Xposed-Modules-Repo/top.hookvip.pro/releases/latest
-    folder_name: 模块/Hookvip
+    folder_name: 应用/Hookvip
 
   - url: https://github.com/xiaye13579/BBLL/releases/latest
     folder_name: 应用/BBLL
